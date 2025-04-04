@@ -7,6 +7,8 @@ export default function GameController() {
   const [allWords, setAllWords] = useState<string[]>([]);
   const [activeWords, setActiveWords] = useState<string[]>([]);
   const [isGameRunning, setIsGameRunning] = useState<boolean>(false);
+  const [currentInput, setCurrentInput] = useState<string>("");
+  const [score, setScore] = useState<number>(0);
 
   useEffect(() => {
     const fetchWords = async () => {
@@ -34,23 +36,46 @@ export default function GameController() {
     } else {
       if (interval) clearInterval(interval);
     }
-
     return () => {
       if (interval) clearInterval(interval);
     };
   }, [isGameRunning, allWords]);
 
+  useEffect(() => {
+    const checkInput = (input: string) => {
+      activeWords.some((word) => {
+        if (word.toLowerCase() === input.toLowerCase()) {
+          setScore(score + word.length * 10);
+          const newActiveWords = activeWords.filter(
+            (word) => word.toLowerCase() !== input.toLowerCase()
+          );
+          setActiveWords(newActiveWords);
+          setCurrentInput("");
+        }
+      });
+    };
+    checkInput(currentInput);
+  }, [currentInput, activeWords, score]);
+
   const handleStart = () => {
     setIsGameRunning(true);
+  };
+
+  const onInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setCurrentInput(e.target?.value);
   };
 
   return (
     <div>
       <h1>Game Controller</h1>
+      <p>Score: {score}</p>
+      <UserInput
+        currentInput={currentInput}
+        handleInputChange={onInputChange}
+      ></UserInput>
       <button onClick={handleStart} disabled={isGameRunning}>
         Start
       </button>
-      <UserInput></UserInput>
       <WordContainer activeWords={activeWords}></WordContainer>
     </div>
   );
