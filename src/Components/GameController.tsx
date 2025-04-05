@@ -2,10 +2,11 @@ import UserInput from "./UserInput";
 import WordContainer from "./WordContainer";
 import { fetchRandomWords } from "../utils/WordFetcher";
 import { useState, useEffect } from "react";
+import { type WordObject } from "../types";
 
 export default function GameController() {
   const [allWords, setAllWords] = useState<string[]>([]);
-  const [activeWords, setActiveWords] = useState<string[]>([]);
+  const [activeWords, setActiveWords] = useState<WordObject[]>([]);
   const [isGameRunning, setIsGameRunning] = useState<boolean>(false);
   const [currentInput, setCurrentInput] = useState<string>("");
   const [score, setScore] = useState<number>(0);
@@ -28,9 +29,15 @@ export default function GameController() {
             return prevActiveWords;
           }
 
-          const nextWord = allWords[0];
+          const nextWordSpelling = allWords[0];
           setAllWords((prevAllWords) => prevAllWords.slice(1));
-          return [...prevActiveWords, nextWord];
+          const newWord: WordObject = {
+            spelling: nextWordSpelling,
+            startPos: Math.random() * 100,
+            endPos: Math.random() * 100,
+            timer: 3000,
+          };
+          return [...prevActiveWords, newWord];
         });
       }, 1000);
     } else {
@@ -42,12 +49,24 @@ export default function GameController() {
   }, [isGameRunning, allWords]);
 
   useEffect(() => {
+    const timerInterval = setInterval(() => {
+      setActiveWords((prevActiveWords) =>
+        prevActiveWords
+          .map((word) => ({ ...word, timer: word.timer - 100 }))
+          .filter((word) => word.timer > 0)
+      );
+    }, 100);
+
+    return () => clearInterval(timerInterval);
+  }, []);
+
+  useEffect(() => {
     const checkInput = (input: string) => {
       activeWords.some((word) => {
-        if (word.toLowerCase() === input.toLowerCase()) {
-          setScore(score + word.length * 10);
+        if (word.spelling.toLowerCase() === input.toLowerCase()) {
+          setScore(score + word.spelling.length * 10);
           const newActiveWords = activeWords.filter(
-            (word) => word.toLowerCase() !== input.toLowerCase()
+            (word) => word.spelling.toLowerCase() !== input.toLowerCase()
           );
           setActiveWords(newActiveWords);
           setCurrentInput("");

@@ -1,7 +1,25 @@
 interface WordProps {
   spelling: string;
+  startPos: number;
+  endPos: number;
+  timer: number;
 }
 
 export default function Word(props: WordProps) {
-  return <p>{props.spelling}</p>;
+  const animationDuration = `${props.timer / 1000}s`;
+
+  return (
+    <>
+      <div
+        style={{
+          position: "absolute",
+          left: `${props.startPos}%`,
+          transition: `left ${animationDuration} linear`,
+          transform: `translateX(${props.endPos - props.startPos}%)`,
+        }}
+      >
+        {props.spelling}
+      </div>
+    </>
+  );
 }

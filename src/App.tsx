@@ -4,7 +4,7 @@ import GameController from "./Components/GameController";
 function App() {
   return (
     <>
-      <GameController></GameController>
+      <GameController />
     </>
   );
 }
