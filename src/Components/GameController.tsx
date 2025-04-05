@@ -38,7 +38,7 @@ export default function GameController() {
           };
           return [...prevActiveWords, newWord];
         });
-      }, 300);
+      }, 200);
     } else {
       if (interval) clearInterval(interval);
     }
@@ -54,7 +54,7 @@ export default function GameController() {
           .map((word) => ({ ...word, timer: word.timer - 100 }))
           .filter((word) => word.timer > 0)
       );
-    }, 500);
+    }, 100);
 
     return () => clearInterval(timerInterval);
   }, []);
@@ -92,17 +92,36 @@ export default function GameController() {
   };
 
   return (
-    <div>
-      <p>Score: {score}</p>
-      <UserInput
-        currentInput={currentInput}
-        handleInputChange={onInputChange}
-        resetInput={resetInput}
-      ></UserInput>
-      <button onClick={handleStart} disabled={isGameRunning}>
-        Start
-      </button>
+    <>
+      <div
+        style={{
+          position: "absolute",
+          bottom: "20px", // Add some space from the bottom
+          left: "50%", // Center horizontally
+          transform: "translateX(-50%)", // Adjust for centering
+          display: "flex",
+          flexDirection: "row", // Stack items vertically
+          alignItems: "center", // Center items horizontally
+          justifyContent: "center", // Center items vertically
+          gap: "10px", // Add space between items
+          fontSize: "30px",
+        }}
+      >
+        <p>Score: {score}</p>
+        <UserInput
+          currentInput={currentInput}
+          handleInputChange={onInputChange}
+          resetInput={resetInput}
+        />
+        <button
+          style={{ fontSize: "30px" }}
+          onClick={handleStart}
+          disabled={isGameRunning}
+        >
+          Start
+        </button>
+      </div>
       <WordContainer activeWords={activeWords}></WordContainer>
-    </div>
+    </>
   );
 }

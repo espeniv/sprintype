@@ -7,7 +7,7 @@ interface WordContainerProps {
 
 export default function WordContainer(props: WordContainerProps) {
   return (
-    <>
+    <div>
       {props.activeWords.map((word) => (
         <Word
           key={word.spelling}
@@ -16,6 +16,6 @@ export default function WordContainer(props: WordContainerProps) {
           timer={word.timer}
         />
       ))}
-    </>
+    </div>
   );
 }

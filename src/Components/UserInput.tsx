@@ -13,6 +13,7 @@ export default function UserInput(props: UserInputProps) {
       }}
     >
       <input
+        style={{ fontSize: "30px" }}
         onChange={(e) => props.handleInputChange(e)}
         value={props.currentInput}
       />
