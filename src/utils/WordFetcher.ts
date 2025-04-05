@@ -1,4 +1,4 @@
-export const fetchRandomWords = async (): Promise<string[]> => {
+export const fetchRandomWords = async (amount: number): Promise<string[]> => {
   const response = await fetch("/assets/wordfile.txt");
   console.log("Response status:", response.status, "URL:", response.url);
 
@@ -13,5 +13,5 @@ export const fetchRandomWords = async (): Promise<string[]> => {
   const uppercasedWords = shuffledWords.map(
     (word) => word[0].toUpperCase() + word.slice(1)
   );
-  return uppercasedWords.slice(0, 200);
+  return uppercasedWords.slice(0, amount);
 };

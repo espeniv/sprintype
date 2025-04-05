@@ -8,12 +8,11 @@ interface WordContainerProps {
 export default function WordContainer(props: WordContainerProps) {
   return (
     <>
-      {props.activeWords.map((word, i) => (
+      {props.activeWords.map((word) => (
         <Word
-          key={i}
+          key={word.spelling}
           spelling={word.spelling}
           startPos={word.startPos}
-          endPos={word.endPos}
           timer={word.timer}
         />
       ))}

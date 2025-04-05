@@ -13,7 +13,7 @@ export default function GameController() {
 
   useEffect(() => {
     const fetchWords = async () => {
-      const words = await fetchRandomWords();
+      const words = await fetchRandomWords(400);
       setAllWords(words);
     };
     fetchWords();
@@ -33,13 +33,12 @@ export default function GameController() {
           setAllWords((prevAllWords) => prevAllWords.slice(1));
           const newWord: WordObject = {
             spelling: nextWordSpelling,
-            startPos: Math.random() * 100,
-            endPos: Math.random() * 100,
-            timer: 3000,
+            startPos: Math.random() * 90,
+            timer: Math.random() * (6000 - 2000) + 2000,
           };
           return [...prevActiveWords, newWord];
         });
-      }, 1000);
+      }, 300);
     } else {
       if (interval) clearInterval(interval);
     }
@@ -55,26 +54,30 @@ export default function GameController() {
           .map((word) => ({ ...word, timer: word.timer - 100 }))
           .filter((word) => word.timer > 0)
       );
-    }, 100);
+    }, 500);
 
     return () => clearInterval(timerInterval);
   }, []);
 
   useEffect(() => {
     const checkInput = (input: string) => {
-      activeWords.some((word) => {
-        if (word.spelling.toLowerCase() === input.toLowerCase()) {
-          setScore(score + word.spelling.length * 10);
-          const newActiveWords = activeWords.filter(
-            (word) => word.spelling.toLowerCase() !== input.toLowerCase()
-          );
-          setActiveWords(newActiveWords);
-          setCurrentInput("");
-        }
-      });
+      const matchedWord = activeWords.find(
+        (word) => word.spelling.toLowerCase() === input.toLowerCase()
+      );
+
+      if (matchedWord) {
+        setScore((prevScore) => prevScore + matchedWord.spelling.length * 10);
+        setActiveWords((prevActiveWords) =>
+          prevActiveWords.filter(
+            (word) => word.spelling !== matchedWord.spelling
+          )
+        );
+        setCurrentInput("");
+      }
     };
+
     checkInput(currentInput);
-  }, [currentInput, activeWords, score]);
+  }, [currentInput, activeWords]);
 
   const handleStart = () => {
     setIsGameRunning(true);
@@ -84,13 +87,17 @@ export default function GameController() {
     setCurrentInput(e.target?.value);
   };
 
+  const resetInput = () => {
+    setCurrentInput("");
+  };
+
   return (
     <div>
-      <h1>Game Controller</h1>
       <p>Score: {score}</p>
       <UserInput
         currentInput={currentInput}
         handleInputChange={onInputChange}
+        resetInput={resetInput}
       ></UserInput>
       <button onClick={handleStart} disabled={isGameRunning}>
         Start
