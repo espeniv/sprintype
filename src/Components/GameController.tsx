@@ -66,7 +66,9 @@ export default function GameController() {
       );
 
       if (matchedWord) {
-        setScore((prevScore) => prevScore + matchedWord.spelling.length * 10);
+        setScore(
+          (prevScore) => prevScore + 100 + matchedWord.spelling.length * 10
+        );
         setActiveWords((prevActiveWords) =>
           prevActiveWords.filter(
             (word) => word.spelling !== matchedWord.spelling

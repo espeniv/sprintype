@@ -5,6 +5,12 @@ interface UserInputProps {
 }
 
 export default function UserInput(props: UserInputProps) {
+  const handleKeyDown = (event: React.KeyboardEvent<HTMLInputElement>) => {
+    if (event.key === "Backspace") {
+      props.resetInput();
+    }
+  };
+
   return (
     <form
       onSubmit={(e) => {
@@ -15,6 +21,7 @@ export default function UserInput(props: UserInputProps) {
       <input
         style={{ fontSize: "30px" }}
         onChange={(e) => props.handleInputChange(e)}
+        onKeyDown={handleKeyDown}
         value={props.currentInput}
       />
     </form>
