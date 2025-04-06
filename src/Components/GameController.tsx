@@ -98,14 +98,14 @@ export default function GameController() {
       <div
         style={{
           position: "absolute",
-          bottom: "20px", // Add some space from the bottom
-          left: "50%", // Center horizontally
-          transform: "translateX(-50%)", // Adjust for centering
+          bottom: "20px",
+          left: "50%",
+          transform: "translateX(-50%)",
           display: "flex",
-          flexDirection: "row", // Stack items vertically
-          alignItems: "center", // Center items horizontally
-          justifyContent: "center", // Center items vertically
-          gap: "10px", // Add space between items
+          flexDirection: "row",
+          alignItems: "center",
+          justifyContent: "center",
+          gap: "10px",
           fontSize: "30px",
         }}
       >
@@ -123,7 +123,10 @@ export default function GameController() {
           Start
         </button>
       </div>
-      <WordContainer activeWords={activeWords}></WordContainer>
+      <WordContainer
+        activeWords={activeWords}
+        currentInput={currentInput}
+      ></WordContainer>
     </>
   );
 }

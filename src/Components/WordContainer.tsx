@@ -3,6 +3,7 @@ import { type WordObject } from "../types";
 
 interface WordContainerProps {
   activeWords: WordObject[];
+  currentInput: string;
 }
 
 export default function WordContainer(props: WordContainerProps) {
@@ -14,6 +15,7 @@ export default function WordContainer(props: WordContainerProps) {
           spelling={word.spelling}
           startPos={word.startPos}
           timer={word.timer}
+          currentInput={props.currentInput}
         />
       ))}
     </div>
