@@ -123,8 +123,8 @@ export default function GameController() {
 
   return (
     <>
+      <p className="score-tracker">Score: {score}</p>
       <div className="game-container">
-        <p className="score-tracker">Score: {score}</p>
         <UserInput
           currentInput={currentInput}
           handleInputChange={onInputChange}

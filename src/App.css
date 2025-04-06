@@ -5,10 +5,14 @@
   text-align: center;
 }
 
-html,
-body {
+body,
+html {
   margin: 0;
   padding: 0;
-  overflow: hidden;
   height: 100%;
+  background: #000000;
+  color: white;
+  font-family: "Inter", sans-serif;
+  font-weight: 300;
+  overflow: hidden;
 }

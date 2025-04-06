@@ -50,11 +50,12 @@ export default function Word({
         left: `${startPos}%`,
         top: falling ? "100%" : "0%",
         transition: `top ${animationDuration} linear`,
+        color: "rgb(150, 150, 150)",
       }}
     >
       {/* Currently set to only color parts if 2 or more letters match */}
       {matchedPart.length >= 2 ? (
-        <span style={{ color: "green" }}>{matchedPart}</span>
+        <span style={{ color: "rgb(255, 255, 255)" }}>{matchedPart}</span>
       ) : (
         <span>{matchedPart}</span>
       )}
