@@ -1,21 +1,24 @@
 import Word from "./Word";
 import { type WordObject } from "../types";
 
-interface WordContainerProps {
+interface WordsContainerProps {
   activeWords: WordObject[];
   currentInput: string;
 }
 
-export default function WordContainer(props: WordContainerProps) {
+export default function WordsContainer({
+  activeWords,
+  currentInput,
+}: WordsContainerProps) {
   return (
     <div>
-      {props.activeWords.map((word) => (
+      {activeWords.map((word) => (
         <Word
           key={word.spelling}
           spelling={word.spelling}
           startPos={word.startPos}
           timer={word.timer}
-          currentInput={props.currentInput}
+          currentInput={currentInput}
         />
       ))}
     </div>

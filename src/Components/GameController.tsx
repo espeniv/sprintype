@@ -1,5 +1,5 @@
 import UserInput from "./UserInput";
-import WordContainer from "./WordContainer";
+import WordsContainer from "./WordsContainer";
 import { fetchRandomWords } from "../utils/WordFetcher";
 import { useState, useEffect } from "react";
 import { type WordObject } from "../types";
@@ -8,24 +8,27 @@ import "../Styles/GameController.css";
 export default function GameController() {
   const [allWords, setAllWords] = useState<string[]>([]);
   const [activeWords, setActiveWords] = useState<WordObject[]>([]);
-  const [isGameRunning, setIsGameRunning] = useState<boolean>(false);
-  const [hasGameStarted, setHasGameStarted] = useState<boolean>(false);
   const [currentInput, setCurrentInput] = useState<string>("");
   const [score, setScore] = useState<number>(0);
+  const [isGameRunning, setIsGameRunning] = useState<boolean>(false);
+  const [hasGameStarted, setHasGameStarted] = useState<boolean>(false);
 
+  //Prepare wrds on component mount
   useEffect(() => {
-    const fetchWords = async () => {
+    const fetchWords = async (): Promise<void> => {
       const words = await fetchRandomWords(400);
       setAllWords(words);
     };
     fetchWords();
   }, []);
 
+  //Handles word spawning
   useEffect(() => {
     let interval: ReturnType<typeof setInterval> | null = null;
     if (isGameRunning) {
       interval = setInterval(() => {
         setActiveWords((prevActiveWords) => {
+          //Stop when there is no more available words
           if (allWords.length === 0) {
             clearInterval(interval!);
             return prevActiveWords;
@@ -33,6 +36,8 @@ export default function GameController() {
 
           const nextWordSpelling = allWords[0];
           setAllWords((prevAllWords) => prevAllWords.slice(1));
+
+          //Randomize start position and travel time
           const newWord: WordObject = {
             spelling: nextWordSpelling,
             startPos: Math.random() * 90,
@@ -49,6 +54,7 @@ export default function GameController() {
     };
   }, [isGameRunning, allWords]);
 
+  //Decrement the timer for each word every 100ms, and remove accordingly
   useEffect(() => {
     const timerInterval = setInterval(() => {
       setActiveWords((prevActiveWords) =>
@@ -61,6 +67,7 @@ export default function GameController() {
     return () => clearInterval(timerInterval);
   }, []);
 
+  //Main logic that checks if the input matches with an active word
   useEffect(() => {
     const checkInput = (input: string) => {
       const matchedWord = activeWords.find((word) =>
@@ -68,6 +75,7 @@ export default function GameController() {
       );
 
       if (matchedWord) {
+        //Score calculation
         setScore(
           (prevScore) => prevScore + 100 + matchedWord.spelling.length * 10
         );
@@ -83,18 +91,19 @@ export default function GameController() {
     checkInput(currentInput);
   }, [currentInput, activeWords]);
 
+  //Check if game is finished
   useEffect(() => {
     if (allWords.length === 0 && activeWords.length === 0) {
       setIsGameRunning(false);
     }
   }, [allWords, activeWords]);
 
-  const handleStart = () => {
+  const handleStart = (): void => {
     setIsGameRunning(true);
     setHasGameStarted(true);
   };
 
-  const handleRestart = async () => {
+  const handleRestart = async (): Promise<void> => {
     setIsGameRunning(false);
     setActiveWords([]);
     setCurrentInput("");
@@ -108,21 +117,21 @@ export default function GameController() {
     setHasGameStarted(true);
   };
 
-  const onInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const onInputChange = (e: React.ChangeEvent<HTMLInputElement>): void => {
     setCurrentInput(e.target?.value);
   };
 
   return (
     <>
       <div className="game-container">
-        <p>Score: {score}</p>
+        <p className="score-tracker">Score: {score}</p>
         <UserInput
           currentInput={currentInput}
           handleInputChange={onInputChange}
         />
         <button
+          className="start-button"
           style={{
-            fontSize: "30px",
             display: isGameRunning ? "none" : "block",
           }}
           onClick={hasGameStarted ? handleRestart : handleStart}
@@ -131,10 +140,10 @@ export default function GameController() {
           {hasGameStarted ? "Restart" : "Start"}
         </button>
       </div>
-      <WordContainer
+      <WordsContainer
         activeWords={activeWords}
         currentInput={currentInput}
-      ></WordContainer>
+      ></WordsContainer>
     </>
   );
 }

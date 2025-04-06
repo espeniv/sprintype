@@ -15,29 +15,33 @@ export default function Word({
 }: WordProps) {
   const animationDuration = `${timer / 1000}s`;
 
-  const [falling, setFalling] = useState(false);
+  const [falling, setFalling] = useState<boolean>(false);
 
+  //Start animation on component/word load
   useEffect(() => {
     const timeout = setTimeout(() => setFalling(true), 0);
     return () => clearTimeout(timeout);
   }, []);
 
-  const matchedIndex = currentInput
+  //Color the part of the word that matches with the current input
+  const matchedIndex: number = currentInput
     .toLowerCase()
     .split("")
     .findIndex((_, index) =>
       spelling.toLowerCase().startsWith(currentInput.toLowerCase().slice(index))
     );
 
-  const matchedPart =
+  const matchedPart: string =
     matchedIndex !== -1
       ? spelling.slice(0, currentInput.length - matchedIndex)
       : "";
-  const remainingPart =
+
+  const remainingPart: string =
     matchedIndex !== -1
       ? spelling.slice(currentInput.length - matchedIndex)
       : spelling;
 
+  //Inline styling for this component to handle animation and coloring
   return (
     <div
       style={{
@@ -48,6 +52,7 @@ export default function Word({
         transition: `top ${animationDuration} linear`,
       }}
     >
+      {/* Currently set to only color parts if 2 or more letters match */}
       {matchedPart.length >= 2 ? (
         <span style={{ color: "green" }}>{matchedPart}</span>
       ) : (

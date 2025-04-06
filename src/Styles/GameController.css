@@ -1,3 +1,5 @@
+@import url("https://fonts.googleapis.com/css2?family=Schibsted+Grotesk:wght@400;700&display=swap");
+
 .game-container {
   position: absolute;
   bottom: 20px;
@@ -8,4 +10,49 @@
   align-items: center;
   justify-content: center;
   font-size: 30px;
+}
+
+.score-tracker {
+  position: absolute;
+  bottom: 20px;
+  left: 20px;
+  font-size: 20px;
+  font-family: "Schibsted Grotesk", sans-serif;
+  padding: 10px 20px;
+  border-radius: 8px;
+  background: linear-gradient(
+    135deg,
+    #6a11cb,
+    #2575fc
+  ); /* Blue gradient background */
+  color: white; /* Text color */
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Subtle shadow for depth */
+  text-align: center;
+}
+
+.start-button {
+  font-size: 30px;
+  font-family: "Schibsted Grotesk", sans-serif; /* Add the font */
+  padding: 15px 30px; /* Add padding for better spacing */
+  border: none; /* Remove default border */
+  border-radius: 8px; /* Rounded corners */
+  background: linear-gradient(
+    135deg,
+    #6a11cb,
+    #2575fc
+  ); /* Gradient background */
+  color: white; /* Text color */
+  cursor: pointer; /* Pointer cursor on hover */
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Subtle shadow for depth */
+  transition: transform 0.2s ease, box-shadow 0.2s ease; /* Smooth hover effects */
+}
+
+.start-button:hover {
+  transform: scale(1.05); /* Slightly enlarge the button on hover */
+  box-shadow: 0 6px 10px rgba(0, 0, 0, 0.15); /* Enhance shadow on hover */
+}
+
+.start-button:active {
+  transform: scale(0.95); /* Slightly shrink the button when clicked */
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Reduce shadow on click */
 }

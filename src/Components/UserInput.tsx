@@ -1,4 +1,5 @@
 import { useEffect, useRef } from "react";
+import "../Styles/UserInput.css";
 
 interface UserInputProps {
   currentInput: string;
@@ -8,19 +9,20 @@ interface UserInputProps {
 export default function UserInput(props: UserInputProps) {
   const inputRef = useRef<HTMLInputElement>(null);
 
+  //Focus input on first mount
   useEffect(() => {
     if (inputRef.current) {
       inputRef.current.focus();
     }
   }, []);
 
+  //Focus input on click anywhere in the application/browserwindow
   useEffect(() => {
     const handleFocus = () => {
       if (inputRef.current) {
         inputRef.current.focus();
       }
     };
-
     window.addEventListener("click", handleFocus);
     return () => {
       window.removeEventListener("click", handleFocus);
@@ -29,13 +31,9 @@ export default function UserInput(props: UserInputProps) {
 
   return (
     <input
+      className="input"
       ref={inputRef}
       type="text"
-      style={{
-        opacity: 0,
-        position: "absolute",
-        pointerEvents: "none",
-      }}
       onChange={(e) => props.handleInputChange(e)}
       value={props.currentInput}
     />
