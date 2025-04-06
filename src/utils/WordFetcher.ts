@@ -1,6 +1,5 @@
 export const fetchRandomWords = async (amount: number): Promise<string[]> => {
   const response = await fetch("/assets/wordfile.txt");
-  console.log("Response status:", response.status, "URL:", response.url);
 
   if (!response.ok) {
     throw new Error("Failed to fetch the word file.");

@@ -9,6 +9,7 @@ export default function GameController() {
   const [allWords, setAllWords] = useState<string[]>([]);
   const [activeWords, setActiveWords] = useState<WordObject[]>([]);
   const [isGameRunning, setIsGameRunning] = useState<boolean>(false);
+  const [hasGameStarted, setHasGameStarted] = useState<boolean>(false);
   const [currentInput, setCurrentInput] = useState<string>("");
   const [score, setScore] = useState<number>(0);
 
@@ -82,8 +83,29 @@ export default function GameController() {
     checkInput(currentInput);
   }, [currentInput, activeWords]);
 
+  useEffect(() => {
+    if (allWords.length === 0 && activeWords.length === 0) {
+      setIsGameRunning(false);
+    }
+  }, [allWords, activeWords]);
+
   const handleStart = () => {
     setIsGameRunning(true);
+    setHasGameStarted(true);
+  };
+
+  const handleRestart = async () => {
+    setIsGameRunning(false);
+    setActiveWords([]);
+    setCurrentInput("");
+    setScore(0);
+    setHasGameStarted(false);
+
+    const words = await fetchRandomWords(400);
+    setAllWords(words);
+
+    setIsGameRunning(true);
+    setHasGameStarted(true);
   };
 
   const onInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -99,11 +121,14 @@ export default function GameController() {
           handleInputChange={onInputChange}
         />
         <button
-          style={{ fontSize: "30px" }}
-          onClick={handleStart}
+          style={{
+            fontSize: "30px",
+            display: isGameRunning ? "none" : "block",
+          }}
+          onClick={hasGameStarted ? handleRestart : handleStart}
           disabled={isGameRunning}
         >
-          Start
+          {hasGameStarted ? "Restart" : "Start"}
         </button>
       </div>
       <WordContainer
