@@ -1,8 +1,15 @@
-/* Score tracker styles */
+.app-title {
+  font-size: 3rem;
+  font-family: "Inter", sans-serif;
+  font-weight: 300;
+  text-align: center;
+  margin-top: 20px;
+}
+
 .score-tracker {
   position: absolute;
-  bottom: 20px;
-  left: 20px;
+  top: 35px;
+  left: 35px;
   font-size: 18px;
   font-family: "Inter", sans-serif;
   padding: 10px 20px;
@@ -15,17 +22,29 @@
   z-index: 10;
 }
 
+.score-tracker-final {
+  position: absolute;
+  bottom: 55%;
+  left: 50%;
+  transform: translate(-50%, 50%);
+  font-size: 24px;
+  font-family: "Inter", sans-serif;
+  color: white;
+  text-align: center;
+  z-index: 10;
+}
+
 .game-container {
   position: relative;
   width: 100%;
   height: 100vh;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
 }
 
 .start-button {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
   font-size: 20px;
   font-family: "Inter", sans-serif;
   padding: 15px 30px;
@@ -39,11 +58,11 @@
 }
 
 .start-button:hover {
-  transform: scale(1.05);
+  transform: translate(-50%, -50%) scale(1.05);
   box-shadow: 0 6px 12px rgba(255, 255, 255, 0.1);
 }
 
 .start-button:active {
-  transform: scale(0.95);
+  transform: translate(-50%, -50%) scale(0.95);
   box-shadow: 0 2px 4px rgba(255, 255, 255, 0.1);
 }

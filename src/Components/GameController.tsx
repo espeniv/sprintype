@@ -16,7 +16,7 @@ export default function GameController() {
   //Prepare wrds on component mount
   useEffect(() => {
     const fetchWords = async (): Promise<void> => {
-      const words = await fetchRandomWords(400);
+      const words = await fetchRandomWords(300);
       setAllWords(words);
     };
     fetchWords();
@@ -41,7 +41,7 @@ export default function GameController() {
           const newWord: WordObject = {
             spelling: nextWordSpelling,
             startPos: Math.random() * 90,
-            timer: Math.random() * (6000 - 2000) + 2000,
+            timer: Math.random() * (6000 - 2500) + 2500,
           };
           return [...prevActiveWords, newWord];
         });
@@ -123,12 +123,25 @@ export default function GameController() {
 
   return (
     <>
-      <p className="score-tracker">Score: {score}</p>
+      {hasGameStarted && isGameRunning ? (
+        <p className="score-tracker">Score: {score}</p>
+      ) : null}
       <div className="game-container">
+        <h1
+          style={{
+            display: isGameRunning ? "none" : "block",
+          }}
+          className="app-title"
+        >
+          Sprintype
+        </h1>
         <UserInput
           currentInput={currentInput}
           handleInputChange={onInputChange}
         />
+        {hasGameStarted && !isGameRunning ? (
+          <p className="score-tracker-final">Final score: {score}</p>
+        ) : null}
         <button
           className="start-button"
           style={{
