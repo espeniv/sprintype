@@ -3,6 +3,7 @@ import WordContainer from "./WordContainer";
 import { fetchRandomWords } from "../utils/WordFetcher";
 import { useState, useEffect } from "react";
 import { type WordObject } from "../types";
+import "../Styles/GameController.css";
 
 export default function GameController() {
   const [allWords, setAllWords] = useState<string[]>([]);
@@ -61,8 +62,8 @@ export default function GameController() {
 
   useEffect(() => {
     const checkInput = (input: string) => {
-      const matchedWord = activeWords.find(
-        (word) => word.spelling.toLowerCase() === input.toLowerCase()
+      const matchedWord = activeWords.find((word) =>
+        input.toLowerCase().includes(word.spelling.toLowerCase())
       );
 
       if (matchedWord) {
@@ -89,31 +90,13 @@ export default function GameController() {
     setCurrentInput(e.target?.value);
   };
 
-  const resetInput = () => {
-    setCurrentInput("");
-  };
-
   return (
     <>
-      <div
-        style={{
-          position: "absolute",
-          bottom: "20px",
-          left: "50%",
-          transform: "translateX(-50%)",
-          display: "flex",
-          flexDirection: "row",
-          alignItems: "center",
-          justifyContent: "center",
-          gap: "10px",
-          fontSize: "30px",
-        }}
-      >
+      <div className="game-container">
         <p>Score: {score}</p>
         <UserInput
           currentInput={currentInput}
           handleInputChange={onInputChange}
-          resetInput={resetInput}
         />
         <button
           style={{ fontSize: "30px" }}

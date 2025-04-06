@@ -1,29 +1,43 @@
+import { useEffect, useRef } from "react";
+
 interface UserInputProps {
   currentInput: string;
   handleInputChange(e: React.ChangeEvent<HTMLInputElement>): void;
-  resetInput(): void;
 }
 
 export default function UserInput(props: UserInputProps) {
-  const handleKeyDown = (event: React.KeyboardEvent<HTMLInputElement>) => {
-    if (event.key === "Backspace") {
-      props.resetInput();
+  const inputRef = useRef<HTMLInputElement>(null);
+
+  useEffect(() => {
+    if (inputRef.current) {
+      inputRef.current.focus();
     }
-  };
+  }, []);
+
+  useEffect(() => {
+    const handleFocus = () => {
+      if (inputRef.current) {
+        inputRef.current.focus();
+      }
+    };
+
+    window.addEventListener("click", handleFocus);
+    return () => {
+      window.removeEventListener("click", handleFocus);
+    };
+  }, []);
 
   return (
-    <form
-      onSubmit={(e) => {
-        e.preventDefault();
-        props.resetInput();
+    <input
+      ref={inputRef}
+      type="text"
+      style={{
+        opacity: 0,
+        position: "absolute",
+        pointerEvents: "none",
       }}
-    >
-      <input
-        style={{ fontSize: "30px" }}
-        onChange={(e) => props.handleInputChange(e)}
-        onKeyDown={handleKeyDown}
-        value={props.currentInput}
-      />
-    </form>
+      onChange={(e) => props.handleInputChange(e)}
+      value={props.currentInput}
+    />
   );
 }
