@@ -1,9 +1,26 @@
 .app-title {
   font-size: 3rem;
   font-family: "Inter", sans-serif;
-  font-weight: 300;
+  font-weight: 100;
   text-align: center;
   margin-top: 20px;
+  background: linear-gradient(45deg, #003cff, #00d1ff, #00ff7f);
+  background-size: 150% 150%;
+  animation: gradient-animation 5s ease infinite;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+@keyframes gradient-animation {
+  0% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0% 50%;
+  }
 }
 
 .score-tracker {

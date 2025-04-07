@@ -17,12 +17,20 @@ export default function Word({
   const animationDuration = `${timer / 1000}s`;
 
   const [falling, setFalling] = useState<boolean>(false);
+  const [isMatched, setIsMatched] = useState<boolean>(false);
 
   //Start animation on component/word load
   useEffect(() => {
     const timeout = setTimeout(() => setFalling(true), 0);
     return () => clearTimeout(timeout);
   }, []);
+
+  //Check if the word is matched
+  useEffect(() => {
+    if (currentInput.toLowerCase() === spelling.toLowerCase()) {
+      setIsMatched(true);
+    }
+  }, [currentInput, spelling]);
 
   //Color the part of the word that matches with the current input
   const matchedIndex: number = currentInput
@@ -42,9 +50,9 @@ export default function Word({
       ? spelling.slice(currentInput.length - matchedIndex)
       : spelling;
 
-  //Inline styling for this component to handle animation and coloring
   return (
     <div
+      className={isMatched ? "scale-fade-out gradient-text" : ""}
       style={{
         fontSize: "30px",
         position: "absolute",

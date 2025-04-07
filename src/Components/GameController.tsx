@@ -79,11 +79,15 @@ export default function GameController() {
         setScore(
           (prevScore) => prevScore + 100 + matchedWord.spelling.length * 10
         );
-        setActiveWords((prevActiveWords) =>
-          prevActiveWords.filter(
-            (word) => word.spelling !== matchedWord.spelling
-          )
-        );
+
+        //Delay is added with setTimeout to allow for fade out animation on words when they are typed correctly
+        setTimeout(() => {
+          setActiveWords((prevActiveWords) =>
+            prevActiveWords.filter(
+              (word) => word.spelling !== matchedWord.spelling
+            )
+          );
+        }, 300);
         setCurrentInput("");
       }
     };
