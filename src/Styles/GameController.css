@@ -4,7 +4,7 @@
   font-weight: 100;
   text-align: center;
   margin-top: 20px;
-  background: linear-gradient(45deg, #003cff, #00d1ff, #00ff7f);
+  background: linear-gradient(45deg, #003cff, #00d1ff, #00ff48);
   background-size: 150% 150%;
   animation: gradient-animation 5s ease infinite;
   -webkit-background-clip: text;
@@ -30,13 +30,21 @@
   font-size: 18px;
   font-family: "Inter", sans-serif;
   padding: 10px 20px;
-  border-radius: 8px;
+  border-radius: 12px;
   background: #1a1a1a;
   color: white;
   border: 1px solid rgba(255, 255, 255, 0.2);
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
   text-align: center;
   z-index: 10;
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+
+.score-tracker p {
+  margin: 0;
+  line-height: 1;
 }
 
 .score-tracker-final {

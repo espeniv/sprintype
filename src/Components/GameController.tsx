@@ -10,13 +10,14 @@ export default function GameController() {
   const [activeWords, setActiveWords] = useState<WordObject[]>([]);
   const [currentInput, setCurrentInput] = useState<string>("");
   const [score, setScore] = useState<number>(0);
+  const [timer, setTimer] = useState<number>(30);
   const [isGameRunning, setIsGameRunning] = useState<boolean>(false);
   const [hasGameStarted, setHasGameStarted] = useState<boolean>(false);
 
   //Prepare wrds on component mount
   useEffect(() => {
     const fetchWords = async (): Promise<void> => {
-      const words = await fetchRandomWords(300);
+      const words = await fetchRandomWords(35);
       setAllWords(words);
     };
     fetchWords();
@@ -25,34 +26,50 @@ export default function GameController() {
   //Handles word spawning
   useEffect(() => {
     let interval: ReturnType<typeof setInterval> | null = null;
+
     if (isGameRunning) {
       interval = setInterval(() => {
-        setActiveWords((prevActiveWords) => {
-          //Stop when there is no more available words
-          if (allWords.length === 0) {
-            clearInterval(interval!);
-            return prevActiveWords;
-          }
-
+        if (allWords.length > 0) {
           const nextWordSpelling = allWords[0];
           setAllWords((prevAllWords) => prevAllWords.slice(1));
-
-          //Randomize start position and travel time
           const newWord: WordObject = {
             spelling: nextWordSpelling,
             startPos: Math.random() * 90,
             timer: Math.random() * (6000 - 2500) + 2500,
           };
-          return [...prevActiveWords, newWord];
-        });
-      }, 200);
+          setActiveWords((prevActiveWords) => [...prevActiveWords, newWord]);
+        } else {
+          clearInterval(interval!);
+        }
+      }, 850); //A new word is added every second
     } else {
       if (interval) clearInterval(interval);
     }
+
     return () => {
       if (interval) clearInterval(interval);
     };
   }, [isGameRunning, allWords]);
+
+  //Handles timer for the game, decrementing in an interval of 1s
+  useEffect(() => {
+    let interval: ReturnType<typeof setInterval> | null = null;
+    if (isGameRunning) {
+      interval = setInterval(() => {
+        setTimer((prevTimer) => {
+          if (prevTimer <= 1) {
+            clearInterval(interval!);
+            setIsGameRunning(false);
+            return 0;
+          }
+          return prevTimer - 1;
+        });
+      }, 1000);
+    } else {
+      setTimer(30);
+    }
+    return () => clearInterval(interval!);
+  }, [isGameRunning]);
 
   //Decrement the timer for each word every 100ms, and remove accordingly
   useEffect(() => {
@@ -114,7 +131,7 @@ export default function GameController() {
     setScore(0);
     setHasGameStarted(false);
 
-    const words = await fetchRandomWords(400);
+    const words = await fetchRandomWords(30);
     setAllWords(words);
 
     setIsGameRunning(true);
@@ -128,7 +145,12 @@ export default function GameController() {
   return (
     <>
       {hasGameStarted && isGameRunning ? (
-        <p className="score-tracker">Score: {score}</p>
+        <>
+          <div className="score-tracker">
+            <p>Score: {score}</p>
+            <p>Timer: {timer}</p>
+          </div>
+        </>
       ) : null}
       <div className="game-container">
         <h1
@@ -157,10 +179,9 @@ export default function GameController() {
           {hasGameStarted ? "Restart" : "Start"}
         </button>
       </div>
-      <WordsContainer
-        activeWords={activeWords}
-        currentInput={currentInput}
-      ></WordsContainer>
+      {isGameRunning && (
+        <WordsContainer activeWords={activeWords} currentInput={currentInput} />
+      )}
     </>
   );
 }

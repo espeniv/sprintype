@@ -21,7 +21,7 @@ export default function Word({
 
   //Start animation on component/word load
   useEffect(() => {
-    const timeout = setTimeout(() => setFalling(true), 0);
+    const timeout = setTimeout(() => setFalling(true), 50);
     return () => clearTimeout(timeout);
   }, []);
 
