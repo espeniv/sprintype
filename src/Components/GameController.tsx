@@ -12,7 +12,7 @@ export default function GameController() {
   const [score, setScore] = useState<number>(0);
   const [timer, setTimer] = useState<number>(30);
   const [isGameRunning, setIsGameRunning] = useState<boolean>(false);
-  const [hasGameStarted, setHasGameStarted] = useState<boolean>(false);
+  const [hasGameStartedOnce, setHasGameStartedOnce] = useState<boolean>(false);
 
   //Prepare wrds on component mount
   useEffect(() => {
@@ -121,7 +121,7 @@ export default function GameController() {
 
   const handleStart = (): void => {
     setIsGameRunning(true);
-    setHasGameStarted(true);
+    setHasGameStartedOnce(true);
   };
 
   const handleRestart = async (): Promise<void> => {
@@ -129,13 +129,11 @@ export default function GameController() {
     setActiveWords([]);
     setCurrentInput("");
     setScore(0);
-    setHasGameStarted(false);
 
     const words = await fetchRandomWords(60);
     setAllWords(words);
 
     setIsGameRunning(true);
-    setHasGameStarted(true);
   };
 
   const onInputChange = (e: React.ChangeEvent<HTMLInputElement>): void => {
@@ -144,7 +142,7 @@ export default function GameController() {
 
   return (
     <>
-      {hasGameStarted && isGameRunning ? (
+      {hasGameStartedOnce && isGameRunning ? (
         <>
           <div className="score-tracker">
             <p>Score: {score}</p>
@@ -161,11 +159,17 @@ export default function GameController() {
         >
           Sprintype
         </h1>
+        {!hasGameStartedOnce ? (
+          <p className="start-text">
+            Get points by writing as many falling words as possible in 30
+            seconds
+          </p>
+        ) : null}
         <UserInput
           currentInput={currentInput}
           handleInputChange={onInputChange}
         />
-        {hasGameStarted && !isGameRunning ? (
+        {hasGameStartedOnce && !isGameRunning ? (
           <p className="score-tracker-final">Final score: {score}</p>
         ) : null}
         <button
@@ -173,10 +177,10 @@ export default function GameController() {
           style={{
             display: isGameRunning ? "none" : "block",
           }}
-          onClick={hasGameStarted ? handleRestart : handleStart}
+          onClick={hasGameStartedOnce ? handleRestart : handleStart}
           disabled={isGameRunning}
         >
-          {hasGameStarted ? "Restart" : "Start"}
+          {hasGameStartedOnce ? "Restart" : "Start"}
         </button>
       </div>
       {isGameRunning && (
