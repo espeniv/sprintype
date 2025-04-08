@@ -17,7 +17,7 @@ export default function GameController() {
   //Prepare wrds on component mount
   useEffect(() => {
     const fetchWords = async (): Promise<void> => {
-      const words = await fetchRandomWords(35);
+      const words = await fetchRandomWords(60);
       setAllWords(words);
     };
     fetchWords();
@@ -41,7 +41,7 @@ export default function GameController() {
         } else {
           clearInterval(interval!);
         }
-      }, 850); //A new word is added every second
+      }, 600); //A new word is added every 600ms
     } else {
       if (interval) clearInterval(interval);
     }
@@ -131,7 +131,7 @@ export default function GameController() {
     setScore(0);
     setHasGameStarted(false);
 
-    const words = await fetchRandomWords(30);
+    const words = await fetchRandomWords(60);
     setAllWords(words);
 
     setIsGameRunning(true);
