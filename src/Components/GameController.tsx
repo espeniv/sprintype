@@ -17,7 +17,7 @@ export default function GameController() {
   //Prepare wrds on component mount
   useEffect(() => {
     const fetchWords = async (): Promise<void> => {
-      const words = await fetchRandomWords(60);
+      const words = await fetchRandomWords(70);
       setAllWords(words);
     };
     fetchWords();
@@ -35,7 +35,11 @@ export default function GameController() {
           const newWord: WordObject = {
             spelling: nextWordSpelling,
             startPos: Math.random() * 90,
-            timer: Math.random() * (6000 - 2500) + 2500,
+            //Timer is randomly set between 1-3s + .5s per letter
+            timer:
+              Math.random() * (3000 - 1000) +
+              1000 +
+              nextWordSpelling.length * 500,
           };
           setActiveWords((prevActiveWords) => [...prevActiveWords, newWord]);
         } else {
@@ -130,7 +134,7 @@ export default function GameController() {
     setCurrentInput("");
     setScore(0);
 
-    const words = await fetchRandomWords(60);
+    const words = await fetchRandomWords(70);
     setAllWords(words);
 
     setIsGameRunning(true);
