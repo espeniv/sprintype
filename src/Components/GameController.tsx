@@ -123,6 +123,20 @@ export default function GameController() {
     }
   }, [allWords, activeWords]);
 
+  //Enables restarting by pressing "r" when game is over and has run once
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key.toLowerCase() === "r" && hasGameStartedOnce && !isGameRunning) {
+        handleRestart();
+      }
+    };
+
+    document.addEventListener("keydown", handleKeyDown);
+    return () => {
+      document.removeEventListener("keydown", handleKeyDown);
+    };
+  }, [isGameRunning, hasGameStartedOnce]);
+
   const handleStart = (): void => {
     setIsGameRunning(true);
     setHasGameStartedOnce(true);
