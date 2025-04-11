@@ -200,6 +200,9 @@ export default function GameController() {
         >
           {hasGameStartedOnce ? "Restart" : "Start"}
         </button>
+        {hasGameStartedOnce && !isGameRunning && (
+          <p className="restartText">(Press the "r" key to restart quickly)</p>
+        )}
       </div>
       {isGameRunning && (
         <WordsContainer activeWords={activeWords} currentInput={currentInput} />
