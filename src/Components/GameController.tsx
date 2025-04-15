@@ -4,13 +4,15 @@ import { fetchRandomWords } from "../utils/WordFetcher";
 import { useState, useEffect } from "react";
 import { type WordObject } from "../types";
 import "../Styles/GameController.css";
+import { supabase } from "../supabaseClient";
+import Highscores from "./Highscores";
 
 export default function GameController() {
   const [allWords, setAllWords] = useState<string[]>([]);
   const [activeWords, setActiveWords] = useState<WordObject[]>([]);
   const [currentInput, setCurrentInput] = useState<string>("");
   const [score, setScore] = useState<number>(0);
-  const [timer, setTimer] = useState<number>(30);
+  const [timer, setTimer] = useState<number>(5);
   const [isGameRunning, setIsGameRunning] = useState<boolean>(false);
   const [hasGameStartedOnce, setHasGameStartedOnce] = useState<boolean>(false);
 
@@ -70,7 +72,7 @@ export default function GameController() {
         });
       }, 1000);
     } else {
-      setTimer(30);
+      setTimer(5);
     }
     return () => clearInterval(interval!);
   }, [isGameRunning]);
@@ -159,6 +161,25 @@ export default function GameController() {
     setCurrentInput(e.target?.value);
   };
 
+  // Function to save a high score
+  const saveHighscore = async (name: string, score: number) => {
+    const { error } = await supabase
+      .from("highscores")
+      .insert([{ name, score }]);
+    if (error) {
+      console.error("Error saving high score:", error.message);
+    }
+  };
+
+  const handleSaveHighscore = () => {
+    if (!isGameRunning && hasGameStartedOnce) {
+      const playerName = prompt("Enter your name for the high score:");
+      if (playerName) {
+        saveHighscore(playerName, score);
+      }
+    }
+  };
+
   return (
     <>
       {hasGameStartedOnce && isGameRunning ? (
@@ -191,19 +212,32 @@ export default function GameController() {
         {hasGameStartedOnce && !isGameRunning ? (
           <p className="score-tracker-final">Final score: {score}</p>
         ) : null}
-        <button
-          className="start-button"
-          style={{
-            display: isGameRunning ? "none" : "block",
-          }}
-          onClick={hasGameStartedOnce ? handleRestart : handleStart}
-          disabled={isGameRunning}
-        >
-          {hasGameStartedOnce ? "Restart" : "Start"}
-        </button>
+        <div className="button-container">
+          <button
+            className="app-button"
+            style={{
+              display: isGameRunning || !hasGameStartedOnce ? "none" : "block",
+            }}
+            onClick={() => handleSaveHighscore}
+            disabled={isGameRunning}
+          >
+            Save score
+          </button>
+          <button
+            className="app-button"
+            style={{
+              display: isGameRunning ? "none" : "block",
+            }}
+            onClick={hasGameStartedOnce ? handleRestart : handleStart}
+            disabled={isGameRunning}
+          >
+            {hasGameStartedOnce ? "Restart" : "Start"}
+          </button>
+        </div>
         {hasGameStartedOnce && !isGameRunning && (
           <p className="restartText">(Press the "r" key to restart quickly)</p>
         )}
+        {!isGameRunning && hasGameStartedOnce && <Highscores />}
       </div>
       {isGameRunning && (
         <WordsContainer activeWords={activeWords} currentInput={currentInput} />
