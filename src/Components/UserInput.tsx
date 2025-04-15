@@ -4,22 +4,23 @@ import "../Styles/UserInput.css";
 interface UserInputProps {
   currentInput: string;
   handleInputChange(e: React.ChangeEvent<HTMLInputElement>): void;
+  isGameRunning: boolean;
 }
 
 export default function UserInput(props: UserInputProps) {
   const inputRef = useRef<HTMLInputElement>(null);
 
-  //Focus input on first mount
+  //Focus input on first mount if game is running
   useEffect(() => {
-    if (inputRef.current) {
+    if (props.isGameRunning && inputRef.current) {
       inputRef.current.focus();
     }
-  }, []);
+  }, [props.isGameRunning]);
 
-  //Focus input on click anywhere in the application/browserwindow
+  //Focus input on click anywhere in the application/browserwindow if game is running
   useEffect(() => {
     const handleFocus = () => {
-      if (inputRef.current) {
+      if (props.isGameRunning && inputRef.current) {
         inputRef.current.focus();
       }
     };
@@ -27,7 +28,7 @@ export default function UserInput(props: UserInputProps) {
     return () => {
       window.removeEventListener("click", handleFocus);
     };
-  }, []);
+  }, [props.isGameRunning]);
 
   return (
     <input

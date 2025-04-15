@@ -15,6 +15,7 @@ export default function GameController() {
   const [timer, setTimer] = useState<number>(5);
   const [isGameRunning, setIsGameRunning] = useState<boolean>(false);
   const [hasGameStartedOnce, setHasGameStartedOnce] = useState<boolean>(false);
+  const [playerName, setPlayerName] = useState<string>("");
 
   //Prepare wrds on component mount
   useEffect(() => {
@@ -172,12 +173,12 @@ export default function GameController() {
   };
 
   const handleSaveHighscore = () => {
-    if (!isGameRunning && hasGameStartedOnce) {
-      const playerName = prompt("Enter your name for the high score:");
-      if (playerName) {
-        saveHighscore(playerName, score);
-      }
+    if (playerName.trim() === "") {
+      alert("Please enter your name before saving!");
+      return;
     }
+    saveHighscore(playerName, score);
+    setPlayerName("");
   };
 
   return (
@@ -208,9 +209,20 @@ export default function GameController() {
         <UserInput
           currentInput={currentInput}
           handleInputChange={onInputChange}
+          isGameRunning={isGameRunning}
         />
+        {!isGameRunning && hasGameStartedOnce && <Highscores />}
         {hasGameStartedOnce && !isGameRunning ? (
-          <p className="score-tracker-final">Final score: {score}</p>
+          <div className="score-and-input-container">
+            <p className="score-tracker-final">Final score: {score}</p>
+            <input
+              type="text"
+              className="player-name-input"
+              placeholder="Enter your name"
+              value={playerName}
+              onChange={(e) => setPlayerName(e.target.value)}
+            />
+          </div>
         ) : null}
         <div className="button-container">
           <button
@@ -218,7 +230,7 @@ export default function GameController() {
             style={{
               display: isGameRunning || !hasGameStartedOnce ? "none" : "block",
             }}
-            onClick={() => handleSaveHighscore}
+            onClick={handleSaveHighscore}
             disabled={isGameRunning}
           >
             Save score
@@ -237,7 +249,6 @@ export default function GameController() {
         {hasGameStartedOnce && !isGameRunning && (
           <p className="restartText">(Press the "r" key to restart quickly)</p>
         )}
-        {!isGameRunning && hasGameStartedOnce && <Highscores />}
       </div>
       {isGameRunning && (
         <WordsContainer activeWords={activeWords} currentInput={currentInput} />
