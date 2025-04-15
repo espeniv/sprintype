@@ -60,6 +60,7 @@ export default function Word({
         top: falling ? "100%" : "0%",
         transition: `top ${animationDuration} linear`,
         color: "rgb(200, 200, 200)",
+        userSelect: "none",
       }}
     >
       {/* Currently set to only color parts if 2 or more letters match */}

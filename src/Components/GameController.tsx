@@ -131,7 +131,8 @@ export default function GameController() {
       }
     };
 
-    document.addEventListener("keydown", handleKeyDown);
+    //Timeout to prevent instant restart while typing when game finishes
+    setTimeout(() => document.addEventListener("keydown", handleKeyDown), 1000);
     return () => {
       document.removeEventListener("keydown", handleKeyDown);
     };
