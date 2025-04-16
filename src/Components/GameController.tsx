@@ -16,6 +16,7 @@ export default function GameController() {
   const [isGameRunning, setIsGameRunning] = useState<boolean>(false);
   const [hasGameStartedOnce, setHasGameStartedOnce] = useState<boolean>(false);
   const [playerName, setPlayerName] = useState<string>("");
+  const [hasSavedScore, setHasSavedScore] = useState<boolean>(false);
 
   //Prepare wrds on component mount
   useEffect(() => {
@@ -151,6 +152,8 @@ export default function GameController() {
     setActiveWords([]);
     setCurrentInput("");
     setScore(0);
+    setHasSavedScore(false);
+    setPlayerName("");
 
     const words = await fetchRandomWords(70);
     setAllWords(words);
@@ -174,10 +177,11 @@ export default function GameController() {
 
   const handleSaveHighscore = () => {
     if (playerName.trim() === "") {
-      alert("Please enter your name before saving!");
+      alert("Enter a name to save highscore");
       return;
     }
     saveHighscore(playerName, score);
+    setHasSavedScore(true);
     setPlayerName("");
   };
 
@@ -211,14 +215,25 @@ export default function GameController() {
           handleInputChange={onInputChange}
           isGameRunning={isGameRunning}
         />
-        {!isGameRunning && hasGameStartedOnce && <Highscores />}
+        {!isGameRunning && hasGameStartedOnce && (
+          <Highscores hasSavedScore={hasSavedScore} />
+        )}
         {hasGameStartedOnce && !isGameRunning ? (
           <div className="score-and-input-container">
-            <p className="score-tracker-final">Your final score: {score}</p>
+            <p
+              className={`score-tracker-final ${
+                hasSavedScore ? "score-tracker-final-submitted" : ""
+              }`}
+            >
+              {!hasSavedScore
+                ? `Your final score: ${score}`
+                : "Score submitted"}
+            </p>
             <input
               type="text"
               className="player-name-input"
-              placeholder="Enter your name"
+              placeholder={!hasSavedScore ? "Enter your name" : "-"}
+              disabled={hasSavedScore}
               value={playerName}
               onChange={(e) => setPlayerName(e.target.value)}
             />
@@ -231,7 +246,9 @@ export default function GameController() {
               display: isGameRunning || !hasGameStartedOnce ? "none" : "block",
             }}
             onClick={handleSaveHighscore}
-            disabled={isGameRunning}
+            disabled={
+              isGameRunning || hasSavedScore || playerName.trim() === ""
+            }
           >
             Save score
           </button>

@@ -9,7 +9,11 @@ interface Highscore {
   created_at: string;
 }
 
-export default function HighScores() {
+interface HighScoresProps {
+  hasSavedScore: boolean;
+}
+
+export default function HighScores({ hasSavedScore }: HighScoresProps) {
   const [highscores, setHighscores] = useState<Highscore[]>([]);
 
   //Load highscores on component muont
@@ -18,8 +22,9 @@ export default function HighScores() {
       const scores = await fetchHighscores();
       setHighscores(scores);
     };
-    loadHighscores();
-  }, []);
+    //Ensure new score is submitted before updating component
+    setTimeout(() => loadHighscores(), 100);
+  }, [hasSavedScore]);
 
   //Fetch with supabase
   const fetchHighscores = async () => {

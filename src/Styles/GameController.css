@@ -136,3 +136,29 @@
   outline: none;
   border-color: rgba(255, 255, 255, 0.5);
 }
+
+.app-button:disabled {
+  color: #aaa;
+  cursor: not-allowed;
+  box-shadow: none;
+  opacity: 0.6;
+}
+
+.app-button:disabled:hover {
+  transform: scale(1);
+  box-shadow: 0 6px 12px rgba(255, 255, 255, 0.1);
+}
+
+.player-name-input:disabled {
+  color: #aaa;
+  cursor: not-allowed;
+  box-shadow: none;
+  opacity: 0.8;
+}
+
+.score-tracker-final-submitted {
+  font-weight: 400;
+  font-style: italic;
+  color: white;
+  opacity: 0.3;
+}
