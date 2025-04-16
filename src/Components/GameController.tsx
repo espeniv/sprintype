@@ -12,7 +12,7 @@ export default function GameController() {
   const [activeWords, setActiveWords] = useState<WordObject[]>([]);
   const [currentInput, setCurrentInput] = useState<string>("");
   const [score, setScore] = useState<number>(0);
-  const [timer, setTimer] = useState<number>(5);
+  const [timer, setTimer] = useState<number>(30);
   const [isGameRunning, setIsGameRunning] = useState<boolean>(false);
   const [hasGameStartedOnce, setHasGameStartedOnce] = useState<boolean>(false);
   const [playerName, setPlayerName] = useState<string>("");
@@ -75,7 +75,7 @@ export default function GameController() {
         });
       }, 1000);
     } else {
-      setTimer(5);
+      setTimer(30);
     }
     return () => clearInterval(interval!);
   }, [isGameRunning]);
@@ -239,10 +239,13 @@ export default function GameController() {
           Sprintype
         </h1>
         {!hasGameStartedOnce ? (
-          <p className="start-text">
-            Get points by writing as many falling words as possible in 30
-            seconds
-          </p>
+          <>
+            <p className="start-text">
+              Get points by writing as many falling words as possible in 30
+              seconds
+            </p>
+            <p className="desktop-text">Game is only playable on desktop</p>
+          </>
         ) : null}
         <UserInput
           currentInput={currentInput}
@@ -279,7 +282,7 @@ export default function GameController() {
             />
           </div>
         ) : null}
-        <div className="button-container">
+        <div className={hasGameStartedOnce ? "button-container" : "null"}>
           <button
             className="app-button"
             style={{
@@ -296,9 +299,11 @@ export default function GameController() {
             Save score
           </button>
           <button
-            className="app-button"
+            className={`app-button ${
+              !hasGameStartedOnce ? "start-button" : "null"
+            }`}
             style={{
-              display: isGameRunning ? "none" : "block",
+              display: isGameRunning ? "none" : "",
             }}
             onClick={hasGameStartedOnce ? handleRestart : handleStart}
             disabled={isGameRunning}

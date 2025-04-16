@@ -4,11 +4,6 @@
   -webkit-text-fill-color: transparent;
 }
 
-.start-text {
-  font-size: 20px;
-  color: #707070;
-}
-
 .scale-fade-out {
   animation: scaleFadeOut 0.5s ease forwards;
 }
