@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { supabase } from "../supabaseClient";
+import "../Styles/Highscores.css";
 
 interface Highscore {
   id: string;
@@ -26,7 +27,7 @@ export default function HighScores() {
       .from("highscores")
       .select("*")
       .order("score", { ascending: false })
-      .limit(10);
+      .limit(50);
     if (error) {
       console.error("Error fetching high scores:", error.message);
       return [];
@@ -35,12 +36,13 @@ export default function HighScores() {
   };
 
   return (
-    <div className="high-scores">
+    <div className="highscores-container">
       <h2>High Scores</h2>
-      <ol>
-        {highscores.map((score) => (
+      <ol className="highscores-list">
+        {highscores.map((score, index) => (
           <li key={score.id}>
-            {score.name}: {score.score}
+            <span className="user-name">{`${index + 1}. ${score.name}`}</span>
+            <span className="score">{score.score}</span>
           </li>
         ))}
       </ol>

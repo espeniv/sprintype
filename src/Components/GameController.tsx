@@ -214,7 +214,7 @@ export default function GameController() {
         {!isGameRunning && hasGameStartedOnce && <Highscores />}
         {hasGameStartedOnce && !isGameRunning ? (
           <div className="score-and-input-container">
-            <p className="score-tracker-final">Final score: {score}</p>
+            <p className="score-tracker-final">Your final score: {score}</p>
             <input
               type="text"
               className="player-name-input"
@@ -247,7 +247,7 @@ export default function GameController() {
           </button>
         </div>
         {hasGameStartedOnce && !isGameRunning && (
-          <p className="restartText">(Press the "r" key to restart quickly)</p>
+          <p className="restartText">(Hold the "r" key to restart quickly)</p>
         )}
       </div>
       {isGameRunning && (
