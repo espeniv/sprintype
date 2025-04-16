@@ -180,7 +180,7 @@
   display: none;
 }
 
-@media (max-width: 768px) {
+@media (max-width: 768px), (max-height: 1080px) {
   .start-button {
     display: none;
   }
@@ -194,5 +194,11 @@
     display: block;
     font-size: 20px;
     color: #707070;
+  }
+  .score-and-input-container {
+    display: none;
+  }
+  .restartText {
+    display: none;
   }
 }
