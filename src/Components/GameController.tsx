@@ -312,7 +312,7 @@ export default function GameController() {
           </button>
         </div>
         {hasGameStartedOnce && !isGameRunning && (
-          <p className="restartText">(Hold the "r" key to restart quickly)</p>
+          <p className="restart-text">(Hold the "r" key to restart quickly)</p>
         )}
       </div>
       {isGameRunning && (

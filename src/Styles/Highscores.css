@@ -18,7 +18,7 @@ h2 {
   list-style: decimal;
   padding: 0 10px 0 0;
   margin: 0;
-  max-height: 50vh;
+  height: 40vh;
   overflow-y: auto;
 }
 
@@ -53,4 +53,16 @@ h2 {
 .highscores-list li .score {
   font-weight: normal;
   color: rgba(255, 255, 255, 0.8);
+}
+
+@media (min-height: 1000px) {
+  .highscores-list {
+    height: 47vh;
+  }
+}
+
+@media (min-height: 1400px) {
+  .highscores-list {
+    height: 51vh;
+  }
 }
