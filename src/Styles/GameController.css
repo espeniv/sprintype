@@ -180,7 +180,7 @@
   display: none;
 }
 
-@media (max-width: 768px), (max-height: 1080px) {
+@media (max-width: 768px), (max-height: 768px) {
   .start-button {
     display: none;
   }
