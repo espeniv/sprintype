@@ -113,7 +113,6 @@
 
 .score-tracker-final {
   font-size: 24px;
-  font-weight: bold;
   margin-bottom: 30px;
 }
 
@@ -157,8 +156,13 @@
 }
 
 .score-tracker-final-submitted {
-  font-weight: 400;
-  font-style: italic;
   color: white;
   opacity: 0.3;
+}
+
+.score-highlight {
+  font-weight: 400;
+  background: linear-gradient(135deg, #007bff, #00d1ff, #00ff7f);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
 }

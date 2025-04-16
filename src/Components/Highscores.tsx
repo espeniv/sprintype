@@ -42,7 +42,7 @@ export default function HighScores({ hasSavedScore }: HighScoresProps) {
 
   return (
     <div className="highscores-container">
-      <h2>High Scores</h2>
+      <h2>Highscore</h2>
       <ol className="highscores-list">
         {highscores.map((score, index) => (
           <li key={score.id}>
