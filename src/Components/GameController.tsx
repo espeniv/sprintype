@@ -18,9 +18,10 @@ export default function GameController() {
   const [hasGameStartedOnce, setHasGameStartedOnce] = useState<boolean>(false);
   const [playerName, setPlayerName] = useState<string>("");
   const [hasSavedScore, setHasSavedScore] = useState<boolean>(false);
-  const nameInputRef = useRef<HTMLInputElement>(null);
+  const [isMuted, setIsMuted] = useState(false);
   const audioContext = useRef<AudioContext | null>(null);
   const soundBuffer = useRef<AudioBuffer | null>(null);
+  const nameInputRef = useRef<HTMLInputElement>(null);
 
   //Prepare wrds on component mount
   useEffect(() => {
@@ -33,6 +34,12 @@ export default function GameController() {
 
   //Sound setup
   useEffect(() => {
+    const mutedStatus: string | null = localStorage.getItem("muted");
+    if (mutedStatus === "true") {
+      setIsMuted(true);
+    } else {
+      setIsMuted(false);
+    }
     const loadSound = async () => {
       if (!audioContext.current) {
         audioContext.current = new AudioContext();
@@ -47,7 +54,7 @@ export default function GameController() {
 
   //Function to play sound
   const playSound = () => {
-    if (audioContext.current && soundBuffer.current) {
+    if (!isMuted && audioContext.current && soundBuffer.current) {
       const source = audioContext.current.createBufferSource();
       source.buffer = soundBuffer.current;
       source.connect(audioContext.current.destination);
@@ -147,7 +154,7 @@ export default function GameController() {
     };
 
     checkInput(currentInput);
-  }, [currentInput, activeWords]);
+  }, [currentInput, activeWords, isGameRunning]);
 
   //Check if game is finished
   useEffect(() => {
@@ -227,6 +234,14 @@ export default function GameController() {
     setCurrentInput(e.target?.value);
   };
 
+  const toggleMute = () => {
+    setIsMuted((prev) => {
+      const newMutedState = !prev;
+      localStorage.setItem("muted", newMutedState.toString());
+      return newMutedState;
+    });
+  };
+
   // Function to save a score using supabase
   const saveHighscore = async (name: string, score: number) => {
     const { error } = await supabase
@@ -257,6 +272,37 @@ export default function GameController() {
           </div>
         </>
       ) : null}
+      <button className="mute-button" onClick={toggleMute}>
+        {isMuted ? (
+          <svg
+            aria-hidden="true"
+            xmlns="http://www.w3.org/2000/svg"
+            width="24"
+            height="24"
+            fill="none"
+            viewBox="0 0 24 24"
+          >
+            <path
+              stroke="currentColor"
+              d="M15.5 8.43A4.985 4.985 0 0 1 17 12c0 1.126-.5 2.5-1.5 3.5m2.864-9.864A8.972 8.972 0 0 1 21 12c0 2.023-.5 4.5-2.5 6M7.8 7.5l2.56-2.133a1 1 0 0 1 1.64.768V12m0 4.5v1.365a1 1 0 0 1-1.64.768L6 15H4a1 1 0 0 1-1-1v-4a1 1 0 0 1 1-1m1-4 14 14"
+            />
+          </svg>
+        ) : (
+          <svg
+            aria-hidden="true"
+            xmlns="http://www.w3.org/2000/svg"
+            width="24"
+            height="24"
+            fill="none"
+            viewBox="0 0 24 24"
+          >
+            <path
+              stroke="currentColor"
+              d="M15.5 8.43A4.985 4.985 0 0 1 17 12a4.984 4.984 0 0 1-1.43 3.5m2.794 2.864A8.972 8.972 0 0 0 21 12a8.972 8.972 0 0 0-2.636-6.364M12 6.135v11.73a1 1 0 0 1-1.64.768L6 15H4a1 1 0 0 1-1-1v-4a1 1 0 0 1 1-1h2l4.36-3.633a1 1 0 0 1 1.64.768Z"
+            />
+          </svg>
+        )}
+      </button>
       <div className="game-container">
         <h1
           style={{
