@@ -6,6 +6,7 @@ import { type WordObject } from "../types";
 import "../Styles/GameController.css";
 import { supabase } from "../supabaseClient";
 import Highscores from "./Highscores";
+import popSoundFile from "../../public/assets/pop.mp3";
 
 export default function GameController() {
   const [allWords, setAllWords] = useState<string[]>([]);
@@ -18,6 +19,8 @@ export default function GameController() {
   const [playerName, setPlayerName] = useState<string>("");
   const [hasSavedScore, setHasSavedScore] = useState<boolean>(false);
   const nameInputRef = useRef<HTMLInputElement>(null);
+  const audioContext = useRef<AudioContext | null>(null);
+  const soundBuffer = useRef<AudioBuffer | null>(null);
 
   //Prepare wrds on component mount
   useEffect(() => {
@@ -27,6 +30,30 @@ export default function GameController() {
     };
     fetchWords();
   }, []);
+
+  //Sound setup
+  useEffect(() => {
+    const loadSound = async () => {
+      if (!audioContext.current) {
+        audioContext.current = new AudioContext();
+      }
+      const response = await fetch(popSoundFile);
+      const arrayBuffer = await response.arrayBuffer();
+      const buffer = await audioContext.current.decodeAudioData(arrayBuffer);
+      soundBuffer.current = buffer;
+    };
+    loadSound();
+  }, []);
+
+  //Function to play sound
+  const playSound = () => {
+    if (audioContext.current && soundBuffer.current) {
+      const source = audioContext.current.createBufferSource();
+      source.buffer = soundBuffer.current;
+      source.connect(audioContext.current.destination);
+      source.start(0);
+    }
+  };
 
   //Handles word spawning
   useEffect(() => {
@@ -101,11 +128,12 @@ export default function GameController() {
       );
 
       if (matchedWord && isGameRunning) {
+        //Play sound on correct word
+        playSound();
         //Score calculation
         setScore(
           (prevScore) => prevScore + 100 + matchedWord.spelling.length * 10
         );
-
         //Delay is added with setTimeout to allow for fade out animation on words when they are typed correctly
         setTimeout(() => {
           setActiveWords((prevActiveWords) =>
@@ -128,7 +156,7 @@ export default function GameController() {
     }
   }, [allWords, activeWords]);
 
-  /*
+  /* Disabled for now
   //Focus name input when the game ends
   useEffect(() => {
     //Only focus after 1s as we dont want to mix game input with name input
