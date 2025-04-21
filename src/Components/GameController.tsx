@@ -296,7 +296,7 @@ export default function GameController() {
               score === 0
             }
           >
-            Save score
+            Submit score
           </button>
           <button
             className={`app-button ${

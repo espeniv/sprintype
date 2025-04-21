@@ -66,7 +66,7 @@
 }
 
 .app-button {
-  font-size: 20px;
+  font-size: 19px;
   font-family: "Inter", sans-serif;
   padding: 15px 30px;
   border: 1px solid rgba(255, 255, 255, 0.2);
@@ -198,7 +198,7 @@
   .score-and-input-container {
     display: none;
   }
-  .restartText {
+  .restart-text {
     display: none;
   }
 }

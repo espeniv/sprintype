@@ -10,6 +10,7 @@ h2 {
   width: 100%;
   max-width: 50%;
   margin: 0 auto;
+  margin-top: 5%;
   padding: 20px;
   overflow: hidden;
 }
@@ -64,5 +65,9 @@ h2 {
 @media (min-height: 1400px) {
   .highscores-list {
     height: 51vh;
+  }
+
+  .highscores-container {
+    margin-top: 20%;
   }
 }
