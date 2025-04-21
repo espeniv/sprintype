@@ -56,13 +56,23 @@ h2 {
   color: rgba(255, 255, 255, 0.8);
 }
 
-@media (min-height: 1000px) {
+@media (min-height: 900px) {
   .highscores-list {
     height: 47vh;
   }
 }
 
-@media (min-height: 1400px) {
+@media (min-height: 1100px) {
+  .highscores-list {
+    height: 47vh;
+  }
+
+  .highscores-container {
+    margin-top: 10%;
+  }
+}
+
+@media (min-height: 1500px) {
   .highscores-list {
     height: 51vh;
   }
