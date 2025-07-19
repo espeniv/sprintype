@@ -18,7 +18,7 @@ export default function GameController() {
   const [hasGameStartedOnce, setHasGameStartedOnce] = useState<boolean>(false);
   const [playerName, setPlayerName] = useState<string>("");
   const [hasSavedScore, setHasSavedScore] = useState<boolean>(false);
-  const [isMuted, setIsMuted] = useState(false);
+  const [isMuted, setIsMuted] = useState(true);
   const audioContext = useRef<AudioContext | null>(null);
   const soundBuffer = useRef<AudioBuffer | null>(null);
   const nameInputRef = useRef<HTMLInputElement>(null);
@@ -35,10 +35,10 @@ export default function GameController() {
   //Sound setup
   useEffect(() => {
     const mutedStatus: string | null = localStorage.getItem("muted");
-    if (mutedStatus === "true") {
-      setIsMuted(true);
-    } else {
+    if (mutedStatus === "false") {
       setIsMuted(false);
+    } else {
+      setIsMuted(true);
     }
     const loadSound = async () => {
       if (!audioContext.current) {
