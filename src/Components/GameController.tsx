@@ -4,9 +4,10 @@ import { fetchRandomWords } from "../utils/WordFetcher";
 import { useState, useEffect, useRef } from "react";
 import { type WordObject } from "../types";
 import "../Styles/GameController.css";
-import { supabase } from "../supabaseClient";
+import { databases, DATABASE_ID, HIGHSCORES_COLLECTION_ID } from "../lib/appwrite";
+import { ID } from "appwrite";
 import Highscores from "./Highscores";
-import popSoundFile from "../../public/assets/pop.mp3";
+const popSoundFile = "/assets/pop.mp3";
 
 export default function GameController() {
   const [allWords, setAllWords] = useState<string[]>([]);
@@ -120,7 +121,7 @@ export default function GameController() {
       setActiveWords((prevActiveWords) =>
         prevActiveWords
           .map((word) => ({ ...word, timer: word.timer - 100 }))
-          .filter((word) => word.timer > 0)
+          .filter((word) => word.timer > 0),
       );
     }, 100);
 
@@ -131,7 +132,7 @@ export default function GameController() {
   useEffect(() => {
     const checkInput = (input: string) => {
       const matchedWord = activeWords.find((word) =>
-        input.toLowerCase().includes(word.spelling.toLowerCase())
+        input.toLowerCase().includes(word.spelling.toLowerCase()),
       );
 
       if (matchedWord && isGameRunning) {
@@ -139,14 +140,14 @@ export default function GameController() {
         playSound();
         //Score calculation
         setScore(
-          (prevScore) => prevScore + 100 + matchedWord.spelling.length * 10
+          (prevScore) => prevScore + 100 + matchedWord.spelling.length * 10,
         );
         //Delay is added with setTimeout to allow for fade out animation on words when they are typed correctly
         setTimeout(() => {
           setActiveWords((prevActiveWords) =>
             prevActiveWords.filter(
-              (word) => word.spelling !== matchedWord.spelling
-            )
+              (word) => word.spelling !== matchedWord.spelling,
+            ),
           );
         }, 300);
         setCurrentInput("");
@@ -242,13 +243,21 @@ export default function GameController() {
     });
   };
 
-  // Function to save a score using supabase
+  // Function to save a score using Appwrite
   const saveHighscore = async (name: string, score: number) => {
-    const { error } = await supabase
-      .from("highscores")
-      .insert([{ name, score }]);
-    if (error) {
-      console.error("Error saving high score:", error.message);
+    try {
+      await databases.createDocument(
+        DATABASE_ID,
+        HIGHSCORES_COLLECTION_ID,
+        ID.unique(),
+        {
+          name,
+          score,
+          created_at: new Date().toISOString(),
+        }
+      );
+    } catch (error) {
+      console.error("Error saving high score:", error);
     }
   };
 

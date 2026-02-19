@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
-import { supabase } from "../supabaseClient";
+import { databases, DATABASE_ID, HIGHSCORES_COLLECTION_ID } from "../lib/appwrite";
+import { Query } from "appwrite";
 import "../Styles/Highscores.css";
 
 interface Highscore {
@@ -26,18 +27,27 @@ export default function HighScores({ hasSavedScore }: HighScoresProps) {
     setTimeout(() => loadHighscores(), 100);
   }, [hasSavedScore]);
 
-  //Fetch with supabase
+  //Fetch with Appwrite
   const fetchHighscores = async () => {
-    const { data, error } = await supabase
-      .from("highscores")
-      .select("*")
-      .order("score", { ascending: false })
-      .limit(50);
-    if (error) {
-      console.error("Error fetching high scores:", error.message);
+    try {
+      const response = await databases.listDocuments(
+        DATABASE_ID,
+        HIGHSCORES_COLLECTION_ID,
+        [
+          Query.orderDesc("score"),
+          Query.limit(50),
+        ]
+      );
+      return response.documents.map((doc) => ({
+        id: doc.$id,
+        name: doc.name as string,
+        score: doc.score as number,
+        created_at: doc.created_at as string,
+      }));
+    } catch (error) {
+      console.error("Error fetching high scores:", error);
       return [];
     }
-    return data;
   };
 
   return (
